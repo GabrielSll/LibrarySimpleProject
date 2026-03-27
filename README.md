@@ -124,14 +124,20 @@ mvnw.cmd spring-boot:run
 | Método | Endpoint | Descrição |
 |---|---|---|
 | `GET` | `/authors` | Listar todos os autores |
+| `GET` | `/authors/{id}` | Buscar autor por ID |
 | `POST` | `/authors` | Criar novo autor |
+| `PUT` | `/authors/{id}` | Atualizar autor |
+| `DELETE` | `/authors/{id}` | Deletar autor |
 
 ### 🏢 Publishers
 
 | Método | Endpoint | Descrição |
 |---|---|---|
 | `GET` | `/publishers` | Listar todas as editoras |
+| `GET` | `/publishers/{id}` | Buscar editora por ID |
 | `POST` | `/publishers` | Criar nova editora |
+| `PUT` | `/publishers/{id}` | Atualizar editora |
+| `DELETE` | `/publishers/{id}` | Deletar editora |
 
 ---
 
