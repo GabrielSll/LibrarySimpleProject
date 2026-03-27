@@ -1,0 +1,51 @@
+package com.example.neo.first_biblioteca_project.controller;
+
+import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
+import com.example.neo.first_biblioteca_project.dto.PublisherRequestDTO;
+import com.example.neo.first_biblioteca_project.dto.PublisherResponseDTO;
+import com.example.neo.first_biblioteca_project.service.PublisherService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/publishers")
+public class PublisherController {
+
+    private PublisherService publisherService;
+
+    @Autowired
+    public PublisherController(PublisherService publisherService) {
+        this.publisherService = publisherService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PublisherResponseDTO>> getAllPublishers() {
+        return ResponseEntity.ok(publisherService.getAllPublishers());}
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PublisherResponseDTO> getPublisherById(@PathVariable UUID id) {
+        return ResponseEntity.ok(publisherService.getPublisherById(id));
+    }
+    
+    @PostMapping
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO dto) {
+        PublisherResponseDTO response = publisherService.createPublisher(dto);
+        return ResponseEntity.status(201).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable UUID id,
+                                                @RequestBody PublisherRequestDTO dto) {
+        return ResponseEntity.ok(publisherService.updatePublisher(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePublisher(@PathVariable UUID id) {
+        publisherService.deletePublisher(id);
+        return ResponseEntity.noContent().build();
+    }
+}

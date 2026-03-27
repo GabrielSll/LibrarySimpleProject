@@ -1,0 +1,55 @@
+package com.example.neo.first_biblioteca_project.service;
+
+import com.example.neo.first_biblioteca_project.dto.AuthorRequestDTO;
+import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
+import com.example.neo.first_biblioteca_project.mapper.AuthorMapper;
+import com.example.neo.first_biblioteca_project.model.AuthorModel;
+import com.example.neo.first_biblioteca_project.repository.AuthorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class AuthorService {
+
+    private final AuthorRepository authorRepository;
+
+    @Autowired
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
+
+    public AuthorResponseDTO createAuthor(AuthorRequestDTO dto) {
+        AuthorModel author = AuthorMapper.toEntity(dto);
+        authorRepository.save(author);
+        return AuthorMapper.toDTO(author);
+    }
+
+    public AuthorResponseDTO updateAuthor(UUID id, AuthorRequestDTO dto) {
+        AuthorModel author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+        author.setName(dto.getName());
+        AuthorModel authorUpdated = authorRepository.save(author);
+        return AuthorMapper.toDTO(authorUpdated);
+    }
+
+    public void deleteAuthor(UUID id) {
+        if (!authorRepository.existsById(id)) {
+            throw new RuntimeException("Author not found");}
+        authorRepository.deleteById(id);
+    }
+
+    public List<AuthorResponseDTO> getAllAuthors() {
+       List<AuthorModel> authors = authorRepository.findAll();
+       return authors.stream().map(AuthorMapper::toDTO).toList();
+    }
+
+    public AuthorResponseDTO getAuthorById(UUID id) {
+        AuthorModel authorModel = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found"));
+
+        return AuthorMapper.toDTO(authorModel);
+    }
+}
