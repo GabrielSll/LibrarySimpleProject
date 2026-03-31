@@ -2,6 +2,8 @@ package com.example.neo.first_biblioteca_project.service;
 
 import com.example.neo.first_biblioteca_project.dto.PublisherRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.PublisherResponseDTO;
+import com.example.neo.first_biblioteca_project.exception.ResourceAlreadyExistsException;
+import com.example.neo.first_biblioteca_project.exception.ResourceNotFoundException;
 import com.example.neo.first_biblioteca_project.mapper.PublisherMapper;
 import com.example.neo.first_biblioteca_project.model.PublisherModel;
 import com.example.neo.first_biblioteca_project.repository.PublisherRepository;
@@ -22,10 +24,13 @@ public class PublisherService {
     }
 
     public PublisherResponseDTO createPublisher(PublisherRequestDTO dto) {
+        if (publisherRepository.existsByName(dto.getName())) {
+            throw new ResourceAlreadyExistsException(
+                    "There is already an publisher with that name: " + dto.getName()
+            );
+        }
         PublisherModel publisher = PublisherMapper.toEntity(dto);
-
         publisherRepository.save(publisher);
-
         return PublisherMapper.toDto(publisher);
     }
 
@@ -50,7 +55,7 @@ public class PublisherService {
 
     public PublisherResponseDTO getPublisherById(UUID id) {
         PublisherModel publisher = publisherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Publisher not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with the id: " + id));
         return PublisherMapper.toDto(publisher);
     }
 }

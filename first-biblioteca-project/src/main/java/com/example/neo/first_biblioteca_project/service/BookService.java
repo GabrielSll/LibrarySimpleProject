@@ -2,6 +2,7 @@ package com.example.neo.first_biblioteca_project.service;
 
 import com.example.neo.first_biblioteca_project.dto.BookRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.BookResponseDTO;
+import com.example.neo.first_biblioteca_project.exception.ResourceNotFoundException;
 import com.example.neo.first_biblioteca_project.mapper.BookMapper;
 import com.example.neo.first_biblioteca_project.model.AuthorModel;
 import com.example.neo.first_biblioteca_project.model.BookModel;
@@ -74,7 +75,7 @@ public class BookService {
 
     public BookResponseDTO getBookById(UUID id) {
         BookModel bookModel = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with the id" + id));
 
         return BookMapper.toDTO(bookModel);
     }

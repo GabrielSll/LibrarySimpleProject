@@ -4,6 +4,7 @@ import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
 import com.example.neo.first_biblioteca_project.dto.PublisherRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.PublisherResponseDTO;
 import com.example.neo.first_biblioteca_project.service.PublisherService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +33,14 @@ public class PublisherController {
     }
     
     @PostMapping
-    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO dto) {
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody @Valid PublisherRequestDTO dto) {
         PublisherResponseDTO response = publisherService.createPublisher(dto);
         return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable UUID id,
-                                                @RequestBody PublisherRequestDTO dto) {
+                                                @RequestBody @Valid PublisherRequestDTO dto) {
         return ResponseEntity.ok(publisherService.updatePublisher(id, dto));
     }
 

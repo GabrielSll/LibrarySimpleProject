@@ -3,6 +3,7 @@ package com.example.neo.first_biblioteca_project.controller;
 import com.example.neo.first_biblioteca_project.dto.BookRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.BookResponseDTO;
 import com.example.neo.first_biblioteca_project.service.BookService;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,14 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookRequestDTO dto) {
+    public ResponseEntity<BookResponseDTO> createBook(@RequestBody @Valid BookRequestDTO dto) {
         BookResponseDTO response = bookService.createBook(dto);
         return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BookResponseDTO> updateBook(@PathVariable UUID id,
-                                      @RequestBody BookRequestDTO dto) {
+                                      @RequestBody @Valid BookRequestDTO dto) {
        return ResponseEntity.ok(bookService.updateBook(id, dto));
     }
 

@@ -2,6 +2,8 @@ package com.example.neo.first_biblioteca_project.service;
 
 import com.example.neo.first_biblioteca_project.dto.AuthorRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
+import com.example.neo.first_biblioteca_project.exception.ResourceAlreadyExistsException;
+import com.example.neo.first_biblioteca_project.exception.ResourceNotFoundException;
 import com.example.neo.first_biblioteca_project.mapper.AuthorMapper;
 import com.example.neo.first_biblioteca_project.model.AuthorModel;
 import com.example.neo.first_biblioteca_project.repository.AuthorRepository;
@@ -22,6 +24,11 @@ public class AuthorService {
     }
 
     public AuthorResponseDTO createAuthor(AuthorRequestDTO dto) {
+        if (authorRepository.existsByName(dto.getName())) {
+            throw new ResourceAlreadyExistsException(
+                    "There is already an author with that name: " + dto.getName()
+            );
+        }
         AuthorModel author = AuthorMapper.toEntity(dto);
         authorRepository.save(author);
         return AuthorMapper.toDTO(author);
@@ -48,7 +55,7 @@ public class AuthorService {
 
     public AuthorResponseDTO getAuthorById(UUID id) {
         AuthorModel authorModel = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with the id: " + id));
 
         return AuthorMapper.toDTO(authorModel);
     }
