@@ -1,4 +1,4 @@
-# 📚 Book Management API
+# 📚 Library Management API
 
 API RESTful desenvolvida com **Spring Boot** para gerenciamento de livros, autores e editoras.
 
