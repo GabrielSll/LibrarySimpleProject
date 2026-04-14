@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Management Library API",
+                title = "Library Management API",
                 version = "1.0",
                 description = "API para gerenciamento de livros, autores e editoras"
         )
