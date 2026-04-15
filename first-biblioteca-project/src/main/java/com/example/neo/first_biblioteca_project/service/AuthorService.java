@@ -8,6 +8,8 @@ import com.example.neo.first_biblioteca_project.mapper.AuthorMapper;
 import com.example.neo.first_biblioteca_project.model.AuthorModel;
 import com.example.neo.first_biblioteca_project.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,9 +50,9 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    public List<AuthorResponseDTO> getAllAuthors() {
-       List<AuthorModel> authors = authorRepository.findAll();
-       return authors.stream().map(AuthorMapper::toDTO).toList();
+    public Page<AuthorResponseDTO> getAllAuthors(Pageable pageable) {
+       Page<AuthorModel> authors = authorRepository.findAll(pageable);
+       return authors.map(AuthorMapper::toDTO);
     }
 
     public AuthorResponseDTO getAuthorById(UUID id) {

@@ -11,6 +11,8 @@ import com.example.neo.first_biblioteca_project.repository.AuthorRepository;
 import com.example.neo.first_biblioteca_project.repository.BookRepository;
 import com.example.neo.first_biblioteca_project.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,9 +70,9 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public List<BookResponseDTO> getAllBooks() {
-        List<BookModel> books = bookRepository.findAll();
-        return books.stream().map(BookMapper::toDTO).toList();
+    public Page<BookResponseDTO> getAllBooks(Pageable pageable) {
+        Page<BookModel> books = bookRepository.findAll(pageable);
+        return books.map(BookMapper::toDTO);
     }
 
     public BookResponseDTO getBookById(UUID id) {

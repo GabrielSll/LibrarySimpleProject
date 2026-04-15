@@ -8,6 +8,8 @@ import com.example.neo.first_biblioteca_project.mapper.PublisherMapper;
 import com.example.neo.first_biblioteca_project.model.PublisherModel;
 import com.example.neo.first_biblioteca_project.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,9 +50,9 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
-    public List<PublisherResponseDTO> getAllPublishers() {
-        List<PublisherModel> publishers = publisherRepository.findAll();
-        return publishers.stream().map(PublisherMapper::toDto).toList();
+    public Page<PublisherResponseDTO> getAllPublishers(Pageable pageable) {
+        Page<PublisherModel> publishers = publisherRepository.findAll(pageable);
+        return publishers.map(PublisherMapper::toDto);
     }
 
     public PublisherResponseDTO getPublisherById(UUID id) {
