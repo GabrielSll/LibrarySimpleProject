@@ -1,5 +1,6 @@
 package com.example.neo.first_biblioteca_project.service;
 
+import com.example.neo.first_biblioteca_project.dto.PublisherFilterDTO;
 import com.example.neo.first_biblioteca_project.dto.PublisherRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.PublisherResponseDTO;
 import com.example.neo.first_biblioteca_project.exception.ResourceAlreadyExistsException;
@@ -7,9 +8,12 @@ import com.example.neo.first_biblioteca_project.exception.ResourceNotFoundExcept
 import com.example.neo.first_biblioteca_project.mapper.PublisherMapper;
 import com.example.neo.first_biblioteca_project.model.PublisherModel;
 import com.example.neo.first_biblioteca_project.repository.PublisherRepository;
+import com.example.neo.first_biblioteca_project.specification.AuthorSpecificiation;
+import com.example.neo.first_biblioteca_project.specification.PublisherSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,8 +54,16 @@ public class PublisherService {
         publisherRepository.deleteById(id);
     }
 
-    public Page<PublisherResponseDTO> getAllPublishers(Pageable pageable) {
-        Page<PublisherModel> publishers = publisherRepository.findAll(pageable);
+    public Page<PublisherResponseDTO> getAllPublishers(PublisherFilterDTO filter, Pageable pageable) {
+
+        Specification<PublisherModel> spec = (root, query, cb) ->
+                cb.conjunction();
+
+        if (filter.getName() != null && !filter.getName().isBlank()) {
+            spec = spec.and(PublisherSpecification.nameContains(filter.getName()));
+        }
+
+        Page<PublisherModel> publishers = publisherRepository.findAll(spec, pageable);
         return publishers.map(PublisherMapper::toDto);
     }
 

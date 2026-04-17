@@ -1,5 +1,6 @@
 package com.example.neo.first_biblioteca_project.controller;
 
+import com.example.neo.first_biblioteca_project.dto.BookFilterDTO;
 import com.example.neo.first_biblioteca_project.dto.BookRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.BookResponseDTO;
 import com.example.neo.first_biblioteca_project.service.BookService;
@@ -14,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,8 +33,12 @@ public class BookController {
 
     @Operation(summary = "Lista todos os livros")
     @GetMapping
-    public ResponseEntity<Page<BookResponseDTO>> getAllBooks(@PageableDefault (size = 10, sort = "name")Pageable pageable) {
-        return ResponseEntity.ok(bookService.getAllBooks(pageable));
+    public ResponseEntity<Page<BookResponseDTO>> getAllBooks(@RequestParam (required = false) String name,
+                                                             @RequestParam (required = false) String publisherName,
+                                                             @RequestParam (required = false) String authorName,
+                                                             @PageableDefault (size = 10, sort = "name")Pageable pageable) {
+        BookFilterDTO filter = new BookFilterDTO(name, publisherName, authorName);
+        return ResponseEntity.ok(bookService.getAllBooks(filter, pageable));
     }
 
     @Operation(summary = "Busca um livro por ID")

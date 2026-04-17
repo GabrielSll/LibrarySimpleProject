@@ -1,5 +1,6 @@
 package com.example.neo.first_biblioteca_project.controller;
 
+import com.example.neo.first_biblioteca_project.dto.AuthorFilterDTO;
 import com.example.neo.first_biblioteca_project.dto.AuthorRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
 import com.example.neo.first_biblioteca_project.service.AuthorService;
@@ -30,9 +31,10 @@ public class AuthorController {
 
     @Operation(summary = "Lista todos os autores")
     @GetMapping
-    public ResponseEntity<Page<AuthorResponseDTO>> getAllAuthors(@PageableDefault(
-            size = 10, sort = "name") Pageable pageable) {
-        return ResponseEntity.ok(authorService.getAllAuthors(pageable));
+    public ResponseEntity<Page<AuthorResponseDTO>> getAllAuthors(@RequestParam (required = false) String name,
+                                                                 @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+        AuthorFilterDTO filter  = new AuthorFilterDTO(name);
+        return ResponseEntity.ok(authorService.getAllAuthors(filter, pageable));
     }
 
     @Operation(summary = "Busca um autor por ID")

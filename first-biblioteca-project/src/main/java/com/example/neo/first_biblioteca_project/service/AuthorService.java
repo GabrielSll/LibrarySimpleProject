@@ -1,5 +1,6 @@
 package com.example.neo.first_biblioteca_project.service;
 
+import com.example.neo.first_biblioteca_project.dto.AuthorFilterDTO;
 import com.example.neo.first_biblioteca_project.dto.AuthorRequestDTO;
 import com.example.neo.first_biblioteca_project.dto.AuthorResponseDTO;
 import com.example.neo.first_biblioteca_project.exception.ResourceAlreadyExistsException;
@@ -7,9 +8,11 @@ import com.example.neo.first_biblioteca_project.exception.ResourceNotFoundExcept
 import com.example.neo.first_biblioteca_project.mapper.AuthorMapper;
 import com.example.neo.first_biblioteca_project.model.AuthorModel;
 import com.example.neo.first_biblioteca_project.repository.AuthorRepository;
+import com.example.neo.first_biblioteca_project.specification.AuthorSpecificiation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,8 +53,16 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    public Page<AuthorResponseDTO> getAllAuthors(Pageable pageable) {
-       Page<AuthorModel> authors = authorRepository.findAll(pageable);
+    public Page<AuthorResponseDTO> getAllAuthors(AuthorFilterDTO filter, Pageable pageable) {
+
+        Specification<AuthorModel> spec = (root, query, cb) ->
+                cb.conjunction();
+
+        if (filter.getName() != null && !filter.getName().isBlank()) {
+            spec = spec.and(AuthorSpecificiation.nameContains(filter.getName()));
+        }
+
+       Page<AuthorModel> authors = authorRepository.findAll(spec, pageable);
        return authors.map(AuthorMapper::toDTO);
     }
 
