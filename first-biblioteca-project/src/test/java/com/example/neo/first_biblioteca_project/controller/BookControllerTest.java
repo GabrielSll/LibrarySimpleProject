@@ -28,17 +28,12 @@ public class BookControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    // Ferramenta que simula requisições HTTP sem precisar de um servidor rodando.
 
     @MockitoBean
     private BookService bookService;
-    // Cria um mock do BookService e registra no contexto do Spring
-    // O Controller vai usar esse mock em vez do Service real
 
     @Autowired
     private ObjectMapper objectMapper;
-    // Converte objetos Java para JSON e vice-versa
-    // Usado para montar o body das requisições
 
     @Test
     void shouldReturnBookWhenFound() throws Exception {

@@ -41,7 +41,6 @@ public class AuthorServiceTest {
 
         AuthorResponseDTO response = authorService.getAuthorById(id);
 
-        // ASSERT - verifica o resultado
         assertNotNull(response);
         assertEquals("Malcolm Gladwell", response.getName());
     }
